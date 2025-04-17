@@ -13,7 +13,7 @@
     <artifactId>petstoreorderservice</artifactId>
     <packaging>jar</packaging>
     <name>petstoreorderservice</name>
-    <version>0.0.1-SNAPSHOT</version> 
+    <version>0.0.1-SNAPSHOT</version>
 
     <properties>
         <java.version>17</java.version>
