@@ -50,6 +50,9 @@ public class StoreApiController implements StoreApi {
 	@Autowired
 	private StoreApiCache storeApiCache;
 
+	@Autowired
+	private ItemReserveService itemReserveService;
+
 	@Override
 	public StoreApiCache getBeanToBeAutowired() {
 		return storeApiCache;
@@ -163,6 +166,8 @@ public class StoreApiController implements StoreApi {
 
 			try {
 				Order order = this.storeApiCache.getOrder(body.getId());
+				log.info("Saving order details in blob");
+				itemReserveService.saveOrderDataInBlob(order);
 				String orderJSON = new ObjectMapper().writeValueAsString(order);
 
 				ApiUtil.setResponse(request, "application/json", orderJSON);
