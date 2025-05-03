@@ -1,15 +1,21 @@
 package com.chtrembl.petstore.order.api;
 
+import com.azure.messaging.servicebus.ServiceBusClientBuilder;
+import com.azure.messaging.servicebus.ServiceBusMessage;
+import com.azure.messaging.servicebus.ServiceBusSenderClient;
 import com.chtrembl.petstore.order.model.ContainerEnvironment;
 import com.chtrembl.petstore.order.model.Order;
 import com.chtrembl.petstore.order.model.Product;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import io.swagger.annotations.ApiParam;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.CacheManager;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -49,6 +55,12 @@ public class StoreApiController implements StoreApi {
 
 	@Autowired
 	private StoreApiCache storeApiCache;
+
+	@Value("${petstore.servicebus.connectionString:}")
+	private String serviceBusConnectionString;
+
+	@Value("${petstore.servicebus.queueName:}")
+	private String queueName;
 
 	@Override
 	public StoreApiCache getBeanToBeAutowired() {
@@ -163,7 +175,14 @@ public class StoreApiController implements StoreApi {
 
 			try {
 				Order order = this.storeApiCache.getOrder(body.getId());
-				String orderJSON = new ObjectMapper().writeValueAsString(order);
+				String orderJSON = new ObjectMapper().setSerializationInclusion(JsonInclude.Include.NON_NULL)
+						.disable(SerializationFeature.FAIL_ON_EMPTY_BEANS)
+						.configure(SerializationFeature.FAIL_ON_SELF_REFERENCES, false).writeValueAsString(order);
+				ServiceBusSenderClient client = new ServiceBusClientBuilder()
+						.connectionString(serviceBusConnectionString).sender().queueName(queueName).buildClient();
+
+				client.sendMessage(new ServiceBusMessage(orderJSON));
+				log.info("Order Details sent to queue {} ", queueName);
 
 				ApiUtil.setResponse(request, "application/json", orderJSON);
 				return new ResponseEntity<>(HttpStatus.OK);
