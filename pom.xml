@@ -7,6 +7,7 @@
         <groupId>org.springframework.boot</groupId> 
         <artifactId>spring-boot-starter-parent</artifactId>
         <version>2.7.10</version>
+        <relativePath/>
     </parent>
 
     <groupId>com.chtrembl.petstore.order</groupId>
@@ -89,16 +90,21 @@
             <artifactId>jaxb-api</artifactId>
             <version>${jaxb.version}</version>
         </dependency>
-<!--        <dependency>-->
-<!--            <groupId>com.azure</groupId>-->
-<!--            <artifactId>azure-cosmos</artifactId>-->
-<!--            <version>${azure.cosmos.version}</version>-->
-<!--        </dependency>-->
-<!--        <dependency>-->
-<!--            <groupId>com.azure</groupId>-->
-<!--            <artifactId>azure-messaging-servicebus</artifactId>-->
-<!--            <version>${azure.servicebus.version}</version>-->
-<!--        </dependency>-->
+        <dependency>
+            <groupId>com.azure</groupId>
+            <artifactId>azure-cosmos</artifactId>
+            <version>${azure.cosmos.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.azure</groupId>
+            <artifactId>azure-spring-data-cosmos</artifactId>
+            <version>3.41.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.azure</groupId>
+            <artifactId>azure-messaging-servicebus</artifactId>
+            <version>${azure.servicebus.version}</version>
+        </dependency>
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
