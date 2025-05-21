@@ -5,6 +5,7 @@ import java.util.Objects;
 
 import javax.validation.constraints.NotNull;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import org.springframework.validation.annotation.Validated;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -17,7 +18,7 @@ import io.swagger.annotations.ApiModelProperty;
 @SuppressWarnings("serial")
 @Validated
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2021-12-23T15:16:30.446-05:00")
-
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class Product implements Serializable {
 	@JsonProperty("id")
 	private Long id = null;
